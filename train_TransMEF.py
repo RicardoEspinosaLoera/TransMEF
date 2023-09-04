@@ -56,10 +56,7 @@ def set_max_split_size_mb(model, max_split_size_mb):
 # Set the desired max_split_size_mb value (e.g., 200 MB)
 max_split_size_mb = 3000
 
-# Call the function to set max_split_size_mb
-set_max_split_size_mb(model, max_split_size_mb)
-
-NWORKERS = 2
+NWORKERS = 4
 
 parser = argparse.ArgumentParser(description='model save and load')
 parser.add_argument('--exp_name', type=str, default='TransMEF_experiments', help='Name of the experiment')
@@ -140,6 +137,8 @@ def main():
     # Init Model
     # ==================
     model = TransNet().to(device)
+    # Call the function to set max_split_size_mb
+    set_max_split_size_mb(model, max_split_size_mb)
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum,
                         weight_decay=args.wd) if args.optimizer == "SGD" \
         else optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.wd)
