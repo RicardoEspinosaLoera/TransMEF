@@ -29,7 +29,7 @@ from tensorboardX import SummaryWriter
 
 #os.environ['CUDA_VISIBLE_DEVICES'] = '4,5,6'
 
-NWORKERS = 4
+NWORKERS = 2
 
 parser = argparse.ArgumentParser(description='model save and load')
 parser.add_argument('--exp_name', type=str, default='TransMEF_experiments', help='Name of the experiment')
