@@ -27,7 +27,7 @@ import copy
 from tqdm import tqdm
 from tensorboardX import SummaryWriter
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '4,5,6'
+#os.environ['CUDA_VISIBLE_DEVICES'] = '4,5,6'
 
 NWORKERS = 4
 
