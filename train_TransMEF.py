@@ -40,10 +40,10 @@ parser.add_argument('--ssl_transformations', type=bool, default=True, help='use 
 parser.add_argument('--miniset', type=bool, default=False, help='to choose a mini dataset')
 parser.add_argument('--minirate', type=float, default=0.2, help='to detemine the size of a mini dataset')
 parser.add_argument('--seed', type=int, default=3, help='random seed (default: 1)')
-parser.add_argument('--gpus', type=lambda s: [int(item.strip()) for item in s.split(',')], default='4,5,6',
+parser.add_argument('--gpus', type=lambda s: [int(item.strip()) for item in s.split(',')], default='0,1,2,3',
                     help='comma delimited of gpu ids to use. Use "-1" for cpu usage')
 parser.add_argument('--epoch', type=int, default=100, help='training epoch')
-parser.add_argument('--batch_size', type=int, default=48, help='batchsize')
+parser.add_argument('--batch_size', type=int, default=24, help='batchsize')
 parser.add_argument('--optimizer', type=str, default='ADAM', choices=['ADAM', 'SGD'])
 parser.add_argument('--lamda_ssim', type=float, default=1, help='weight of the SSIM loss')
 parser.add_argument('--lamda_tv', type=float, default=20, help='weight of the tv loss')
