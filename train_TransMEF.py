@@ -110,6 +110,8 @@ def main():
     # Init Model
     # ==================
     model = TransNet().to(device)
+    model = nn.DataParallel(model, device_ids=[0, 1,2]).to(device)
+    #model.to(device)
     
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum,
                         weight_decay=args.wd) if args.optimizer == "SGD" \
