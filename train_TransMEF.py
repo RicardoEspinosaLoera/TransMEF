@@ -26,7 +26,7 @@ import log
 import copy
 from tqdm import tqdm
 from tensorboardX import SummaryWriter
-
+torch.cuda.empty_cache()
 #os.environ['CUDA_VISIBLE_DEVICES'] = '4,5,6'
 
 NWORKERS = 4
@@ -43,7 +43,7 @@ parser.add_argument('--seed', type=int, default=3, help='random seed (default: 1
 parser.add_argument('--gpus', type=lambda s: [int(item.strip()) for item in s.split(',')], default='0,1,2,3',
                     help='comma delimited of gpu ids to use. Use "-1" for cpu usage')
 parser.add_argument('--epoch', type=int, default=100, help='training epoch')
-parser.add_argument('--batch_size', type=int, default=12, help='batchsize')
+parser.add_argument('--batch_size', type=int, default=48, help='batchsize')
 parser.add_argument('--optimizer', type=str, default='ADAM', choices=['ADAM', 'SGD'])
 parser.add_argument('--lamda_ssim', type=float, default=1, help='weight of the SSIM loss')
 parser.add_argument('--lamda_tv', type=float, default=20, help='weight of the tv loss')
