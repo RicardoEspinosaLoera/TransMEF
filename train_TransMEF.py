@@ -102,7 +102,7 @@ val_loader = DataLoader(dataset, num_workers=NWORKERS, batch_size=args.batch_siz
                         sampler=valid_sampler)
 
 #torch.cuda.synchronize()
-start = time.time()
+#start = time.time()
 
 # ==================
 # Init Model
@@ -312,7 +312,7 @@ for epoch in tqdm(range(args.epoch)):
     torch.save(state, os.path.join(args.save_path,
                                    args.summary_name + 'epoch_' + str(epoch) + '_' + str(loss_val[epoch]) + '.pth'))
 #torch.cuda.synchronize()
-end = time.time()
+#end = time.time()
 
 # save best model
 minloss_index = loss_val.index(min(loss_val))
