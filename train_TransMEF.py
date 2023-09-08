@@ -26,8 +26,8 @@ import log
 import copy
 from tqdm import tqdm
 from tensorboardX import SummaryWriter
-torch.cuda.empty_cache()
-#os.environ['CUDA_VISIBLE_DEVICES'] = '4,5,6'
+
+os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 NWORKERS = 4
 
