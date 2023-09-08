@@ -27,7 +27,7 @@ import copy
 from tqdm import tqdm
 from tensorboardX import SummaryWriter
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+#os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 NWORKERS = 4
 
@@ -40,7 +40,7 @@ parser.add_argument('--ssl_transformations', type=bool, default=True, help='use 
 parser.add_argument('--miniset', type=bool, default=False, help='to choose a mini dataset')
 parser.add_argument('--minirate', type=float, default=0.2, help='to detemine the size of a mini dataset')
 parser.add_argument('--seed', type=int, default=3, help='random seed (default: 1)')
-parser.add_argument('--gpus', type=lambda s: [int(item.strip()) for item in s.split(',')], default='5',
+parser.add_argument('--gpus', type=lambda s: [int(item.strip()) for item in s.split(',')], default='6,7',
                     help='comma delimited of gpu ids to use. Use "-1" for cpu usage')
 parser.add_argument('--epoch', type=int, default=100, help='training epoch')
 parser.add_argument('--batch_size', type=int, default=48, help='batchsize')
