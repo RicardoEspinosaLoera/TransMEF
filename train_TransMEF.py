@@ -40,7 +40,7 @@ parser.add_argument('--ssl_transformations', type=bool, default=True, help='use 
 parser.add_argument('--miniset', type=bool, default=False, help='to choose a mini dataset')
 parser.add_argument('--minirate', type=float, default=0.2, help='to detemine the size of a mini dataset')
 parser.add_argument('--seed', type=int, default=3, help='random seed (default: 1)')
-parser.add_argument('--gpus', type=lambda s: [int(item.strip()) for item in s.split(',')], default='-1',
+parser.add_argument('--gpus', type=lambda s: [int(item.strip()) for item in s.split(',')], default='1',
                     help='comma delimited of gpu ids to use. Use "-1" for cpu usage')
 parser.add_argument('--epoch', type=int, default=100, help='training epoch')
 parser.add_argument('--batch_size', type=int, default=48, help='batchsize')
@@ -103,14 +103,13 @@ def main():
     val_loader = DataLoader(dataset, num_workers=NWORKERS, batch_size=args.batch_size,
                             sampler=valid_sampler)
 
-    #torch.cuda.synchronize()
+    torch.cuda.synchronize()
     start = time.time()
 
     # ==================
     # Init Model
     # ==================
     model = TransNet().to(device)
-    model = nn.DataParallel(model, device_ids=[0, 1,2]).to(device)
     #model.to(device)
     
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum,
@@ -316,7 +315,7 @@ def main():
         }
         torch.save(state, os.path.join(args.save_path,
                                     args.summary_name + 'epoch_' + str(epoch) + '_' + str(loss_val[epoch]) + '.pth'))
-    #torch.cuda.synchronize()
+    torch.cuda.synchronize()
     end = time.time()
 
     # save best model
