@@ -103,7 +103,7 @@ def main():
     val_loader = DataLoader(dataset, num_workers=NWORKERS, batch_size=args.batch_size,
                             sampler=valid_sampler)
 
-    torch.cuda.synchronize()
+    #torch.cuda.synchronize()
     start = time.time()
 
     # ==================
@@ -316,7 +316,7 @@ def main():
         }
         torch.save(state, os.path.join(args.save_path,
                                     args.summary_name + 'epoch_' + str(epoch) + '_' + str(loss_val[epoch]) + '.pth'))
-    torch.cuda.synchronize()
+    #torch.cuda.synchronize()
     end = time.time()
 
     # save best model
