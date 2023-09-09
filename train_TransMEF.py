@@ -52,7 +52,7 @@ parser.add_argument('--lr', type=float, default=1e-4, help='learning rate')
 parser.add_argument('--momentum', type=float, default=0.9, help='SGD momentum')
 parser.add_argument('--wd', type=float, default=5e-5, help='weight decay')
 parser.add_argument('--dropout', type=float, default=0.5, help='dropout rate')
-parser.add_argument('--summary_name', type=str, default='TransMEF_alldata_ssl_transformations_',
+parser.add_argument('--summary_name', type=str, default='TransMEF_',
                     help='Name of the tensorboard summmary')
 
 args = parser.parse_args()
@@ -309,8 +309,7 @@ for epoch in tqdm(range(args.epoch)):
         'epoch': epoch,
         'model': model.state_dict(),
     }
-    torch.save(state, os.path.join(args.save_path,
-                                   args.summary_name + 'epoch_' + str(epoch) + '_' + str(loss_val[epoch]) + '.pth'))
+    torch.save(state, os.path.join(args.save_path,args.summary_name + 'epoch_' + str(epoch) +'.pth'))
 #torch.cuda.synchronize()
 #end = time.time()
 
