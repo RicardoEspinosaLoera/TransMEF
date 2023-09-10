@@ -106,8 +106,9 @@ def test(test_path, model, save_path='./test_result/'):
     img_name_list = list(
         set([img_list[i].split('/')[-1].split('.')[0]  for i in range(len(img_list))]))
     print(img_name_list)
+    print(type(img_name_list))
     fusion_phase = test_gray()
-    
+
     """
     for i in range(int(img_num)):
         img1_path = img_name_list[0] + '.' + suffix
