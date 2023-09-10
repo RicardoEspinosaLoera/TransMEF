@@ -13,17 +13,17 @@ from collections import OrderedDict
 from Network_TransMEF import TransNet
 import os
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+#os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 parser = argparse.ArgumentParser(description='model save and load')
-parser.add_argument('--gpus', type=lambda s: [int(item.strip()) for item in s.split(',')], default='0',
+parser.add_argument('--gpus', type=lambda s: [int(item.strip()) for item in s.split(',')], default='3',
                     help='comma delimited of gpu ids to use. Use "-1" for cpu usage')
 parser.add_argument('--model_path', type=str, default='./bestmodel.pth', help='best model path')
 parser.add_argument('--test_path', type=str, default='./MEFB_dataset/', help='test dataset path')
 parser.add_argument('--result_path', type=str, default='./TransMEF_result', help='test result path')
 args = parser.parse_args()
 device = 'cuda'
-
+print("Fusion Gray")
 model = TransNet().to(device)
 
 state_dict = torch.load(args.model_path, map_location='cuda:0')['model']
