@@ -101,6 +101,7 @@ def test(test_path, model, save_path='./test_result/'):
     img_list = glob(test_path + '*')
     img_num = len(img_list) / 2
     suffix = img_list[0].split('.')[-1]
+    print(suffix)
     img_name_list = list(
         set([img_list[i].split('\\')[-1].split('.')[0].strip(string.digits) for i in range(len(img_list))]))
     print(img_name_list)
