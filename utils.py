@@ -111,7 +111,8 @@ def test(test_path, model, save_path='./test_result/'):
     for i in range(int(img_num)):
         img1_path = img_name_list[0] + '.' + suffix
         img2_path = img_name_list[1] + '.' + suffix
-
+        print(img1_path)
+        print(img2_path)
         save_name = 'fusion_' + str(i) + '.' + suffix
         fusion_phase.get_fusion(img1_path, img2_path, model,
                                 save_path=save_path, save_name=save_name)
