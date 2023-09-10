@@ -99,11 +99,11 @@ class test_gray(Test):
 def test(test_path, model, save_path='./test_result/'):
     #print(save_path)
     img_list = glob(test_path + '/*')
-    #print(img_list)
+    print(img_list)
     img_num = len(img_list) / 2
     suffix = img_list[0].split('.')[-1]
     #print(suffix)
-    img_name_list = list([int(img_list[i].split('/')[-1].split('.')[0])  for i in range(len(img_list))])
+    img_name_list = list([int(img_list[i].split('/')[-1].split('.')[0])  for i in range(len(img_list)) if img_list[i].isdigit()])
     print(img_name_list)
     print(type(img_name_list))
     fusion_phase = test_gray()
