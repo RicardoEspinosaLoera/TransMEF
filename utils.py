@@ -99,12 +99,12 @@ class test_gray(Test):
 def test(test_path, model, save_path='./test_result/'):
     print(save_path)
     img_list = glob(test_path + '/*')
-    print(img_list)
+    #print(img_list)
     img_num = len(img_list) / 2
     suffix = img_list[0].split('.')[-1]
-    print(suffix)
+    #print(suffix)
     img_name_list = list(
-        set([img_list[i].split('\\')[-1].split('.')[0].strip(string.digits) for i in range(len(img_list))]))
+        set([img_list[i].split('/')[-1].split('.')[0].split("_")[-1]].strip(string.digits) for i in range(len(img_list)) if "01_" in i ]))
     print(img_name_list)
     fusion_phase = test_gray()
 
