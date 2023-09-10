@@ -98,12 +98,12 @@ class test_gray(Test):
 
 def test(test_path, model, save_path='./test_result/'):
     #print(save_path)
-    img_list = glob(test_path + '/*')
+    img_list = glob(test_path + '/*.jpg')
     print(img_list)
     img_num = len(img_list) / 2
     suffix = img_list[0].split('.')[-1]
     #print(suffix)
-    img_name_list = list([img_list[i].split('/')[-1].split('.')[0] for i in range(len(img_list) if img_list[i] isdigit)])
+    img_name_list = list([img_list[i].split('/')[-1].split('.')[0] for i in range(len(img_list))])
     print(img_name_list)
     for i in img_name_list:
         print(i)
