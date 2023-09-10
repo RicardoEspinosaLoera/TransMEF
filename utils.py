@@ -98,7 +98,7 @@ class test_gray(Test):
 
 def test(test_path, model, save_path='./test_result/'):
     print(save_path)
-    img_list = glob(test_path + '*')
+    img_list = glob(test_path + '/*')
     print(img_list)
     img_num = len(img_list) / 2
     suffix = img_list[0].split('.')[-1]
