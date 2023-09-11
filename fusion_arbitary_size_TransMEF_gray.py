@@ -205,11 +205,10 @@ class test_gray(Test):
         return fused_img
 
 def fun(test_path, model, save_path='./test_result/'):
-    img_list = glob(test_path + '*')
+    img_list = glob(test_path + '*.jpg')
     img_num = len(img_list) / 2
     suffix = img_list[0].split('.')[-1]
-    img_name_list = list(
-        set([img_list[i].split('\\')[-1].split('.')[0].strip(string.digits) for i in range(len(img_list))])) #for windows
+    img_name_list = list(set([int(img_list[i].split('/')[-1].split('.')[0]) for i in range(len(img_list))]))
 
     fusion_phase = test_gray()
 
@@ -223,17 +222,17 @@ def fun(test_path, model, save_path='./test_result/'):
 
 if __name__ == '__main__':
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+    #os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
     parser = argparse.ArgumentParser(description='model save and load')
-    parser.add_argument('--gpus', type=lambda s: [int(item.strip()) for item in s.split(',')], default='0,1',
+    parser.add_argument('--gpus', type=lambda s: [int(item.strip()) for item in s.split(',')], default='3',
                         help='comma delimited of gpu ids to use. Use "-1" for cpu usage')
     args = parser.parse_args()
     device = 'cuda'
 
     model = TransNet().to(device)
 
-    state_dict = torch.load('./best_model.pth', map_location='cuda:0')['model']
+    state_dict = torch.load('/workspace/TransMEF/train_result_TransMEF_c10k/TransMEF_epoch_99.pth', map_location='cuda:3')['model']
 
     if len(args.gpus) > 1:
         new_state_dict = OrderedDict()
@@ -244,7 +243,7 @@ if __name__ == '__main__':
     else:
         model.load_state_dict(state_dict)
 
-    test_path = './MEFB_L_gray/'
+    test_path = '/workspace/c10k_gray/01_test'
 
     model.eval()
 
