@@ -65,7 +65,7 @@ def SSR(img, variance):
     img = np.float64(img) + 1.0
     img_retinex = singleScaleRetinex(img, variance)
     #for i in range(img_retinex.shape[2]):
-    unique, count = np.unique(np.int32(img_retinex[:, :, i] * 100), return_counts=True)
+    unique, count = np.unique(np.int32(img_retinex[:, :] * 100), return_counts=True)
     for u, c in zip(unique, count):
         if u == 0:
             zero_count = c
