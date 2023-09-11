@@ -21,6 +21,71 @@ import cv2
 sometimes = lambda aug: iaa.Sometimes(0.8, aug)
 np.random.seed(2)
 
+def singleScaleRetinex(img,variance):
+    retinex = np.log10(img) - np.log10(cv2.GaussianBlur(img, (0, 0), variance))
+    return retinex
+
+def multiScaleRetinex(img, variance_list):
+    retinex = np.zeros_like(img)
+    for variance in variance_list:
+        retinex += singleScaleRetinex(img, variance)
+    retinex = retinex / len(variance_list)
+    return retinex
+   
+
+def MSR(img, variance_list):
+    img = np.float64(img) + 1.0
+    img_retinex = multiScaleRetinex(img, variance_list)
+
+    for i in range(img_retinex.shape[2]):
+        unique, count = np.unique(np.int32(img_retinex[:, :, i] * 100), return_counts=True)
+        for u, c in zip(unique, count):
+            if u == 0:
+                zero_count = c
+                break            
+        low_val = unique[0] / 100.0
+        high_val = unique[-1] / 100.0
+        for u, c in zip(unique, count):
+            if u < 0 and c < zero_count * 0.1:
+                low_val = u / 100.0
+            if u > 0 and c < zero_count * 0.1:
+                high_val = u / 100.0
+                break            
+        img_retinex[:, :, i] = np.maximum(np.minimum(img_retinex[:, :, i], high_val), low_val)
+        
+        img_retinex[:, :, i] = (img_retinex[:, :, i] - np.min(img_retinex[:, :, i])) / \
+                               (np.max(img_retinex[:, :, i]) - np.min(img_retinex[:, :, i])) \
+                               * 255
+    img_retinex = np.uint8(img_retinex)        
+    return img_retinex
+
+
+
+def SSR(img, variance):
+    img = np.float64(img) + 1.0
+    img_retinex = singleScaleRetinex(img, variance)
+    for i in range(img_retinex.shape[2]):
+        unique, count = np.unique(np.int32(img_retinex[:, :, i] * 100), return_counts=True)
+        for u, c in zip(unique, count):
+            if u == 0:
+                zero_count = c
+                break            
+        low_val = unique[0] / 100.0
+        high_val = unique[-1] / 100.0
+        for u, c in zip(unique, count):
+            if u < 0 and c < zero_count * 0.1:
+                low_val = u / 100.0
+            if u > 0 and c < zero_count * 0.1:
+                high_val = u / 100.0
+                break            
+        img_retinex[:, :, i] = np.maximum(np.minimum(img_retinex[:, :, i], high_val), low_val)
+        
+        img_retinex[:, :, i] = (img_retinex[:, :, i] - np.min(img_retinex[:, :, i])) / \
+                               (np.max(img_retinex[:, :, i]) - np.min(img_retinex[:, :, i])) \
+                               * 255
+    img_retinex = np.uint8(img_retinex)        
+    return img_retinex
+
 
 def local_pixel_shuffling(x):
     image_temp = copy.deepcopy(x)
@@ -98,14 +163,14 @@ def bright_transform(x):
     img_rows, img_cols = x.shape
     num_block = 10
     for _ in range(num_block):
-        block_noise_size_x = random.randint(1, img_rows // 10)
-        block_noise_size_y = random.randint(1, img_cols // 10)
+        block_noise_size_x = random.randint(1, img_rows // 5)
+        block_noise_size_y = random.randint(1, img_cols // 5)
         noise_x = random.randint(0, img_rows - block_noise_size_x)
         noise_y = random.randint(0, img_cols - block_noise_size_y)
         window = orig_image[noise_x:noise_x + block_noise_size_x,
                  noise_y:noise_y + block_noise_size_y]
-        #window = brightness_aug(window, 1.5 * np.random.random_sample())
-        window = brightness_equalization(window)
+        window = brightness_aug(window, 3 * np.random.random_sample())
+        #window = brightness_equalization(window)
 
 
         image_temp[noise_x:noise_x + block_noise_size_x,
@@ -187,6 +252,7 @@ class Fusionset(Data.Dataset):
         if self.gray:
             img = img.convert('L')
         img = np.array(img)
+        img = SSR(img,500)
 
         if self.ssl_transformations == True:
             img_bright_orig = img.copy()
