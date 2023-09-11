@@ -25,7 +25,10 @@ import argparse
 import log
 import copy
 from tqdm import tqdm
-from tensorboardX import SummaryWriter
+import wandb
+
+wandb.init(project="TransMEF", entity="respinosa")
+#from tensorboardX import SummaryWriter
 
 #os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
@@ -56,7 +59,7 @@ parser.add_argument('--summary_name', type=str, default='TransMEF_',
                     help='Name of the tensorboard summmary')
 
 args = parser.parse_args()
-writer = SummaryWriter(comment=args.summary_name)
+#writer = SummaryWriter(comment=args.summary_name)
 
 # ==================
 # init
@@ -167,14 +170,17 @@ for epoch in tqdm(range(args.epoch)):
         image_shuffling = toPIL(img_recon_shuffling[0].squeeze(0).detach().cpu())
 
         if index % 100 == 0:
-            image_bright.save(os.path.join(args.save_path, args.summary_name + '_bright_epoch' + str(epoch) + '_' + str(
+            wandb.log({args.summary_name +"_bright_epoch"+ str(epoch): wandb.Image(image_bright)},step=epoch)
+            wandb.log({args.summary_name +"_image_fourier"+ str(epoch): wandb.Image(image_fourier)},step=epoch)
+            wandb.log({args.summary_name +"_shuffling_epoch"+ str(epoch): wandb.Image(image_shuffling)},step=epoch)
+            """image_bright.save(os.path.join(args.save_path, args.summary_name + '_bright_epoch' + str(epoch) + '_' + str(
                 index) + '_coco_train.png'))
             image_fourier.save(
                 os.path.join(args.save_path, args.summary_name + '_fourier_epoch' + str(epoch) + '_' + str(
                     index) + '_coco_train.png'))
             image_shuffling.save(
                 os.path.join(args.save_path, args.summary_name + '_shuffling_epoch' + str(epoch) + '_' + str(
-                    index) + '_coco_train.png'))
+                    index) + '_coco_train.png'))"""
 
         mse_loss_bright = MSE_fun(img_orig, img_recon_bright)
         ssim_loss_bright = (1 - SSIM_fun(img_orig, img_recon_bright))
@@ -211,6 +217,16 @@ for epoch in tqdm(range(args.epoch)):
 
     print('Epoch:[%d/%d]-----Train------ LOSS:%.4f' % (
         epoch, args.epoch, total_task_loss_per_epoch_refresh / (len(train_loader))))
+    wandb.log({'Train/total_task_loss', total_task_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
+    wandb.log({'Train/total_task_mse_loss', total_task_mse_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
+    wandb.log({'Train/total_task_ssim_loss', total_task_ssim_loss_per_epoch_refresh / (len(train_loader)},step =epoch)
+    wandb.log({'Train/total_task_tv_loss', total_task_tv_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
+    wandb.log({'Train/total_bright_loss', total_bright_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
+    wandb.log({'Train/total_fourier_loss', total_fourier_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
+    wandb.log({'Train/total_shuffling_loss', total_shuffling_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
+
+
+    """
     writer.add_scalar('Train/total_task_loss', total_task_loss_per_epoch_refresh / (len(train_loader)), epoch)
     writer.add_scalar('Train/total_task_mse_loss', total_task_mse_loss_per_epoch_refresh / (len(train_loader)), epoch)
     writer.add_scalar('Train/total_task_ssim_loss', total_task_ssim_loss_per_epoch_refresh / (len(train_loader)), epoch)
@@ -218,7 +234,7 @@ for epoch in tqdm(range(args.epoch)):
     writer.add_scalar('Train/total_bright_loss', total_bright_loss_per_epoch_refresh / (len(train_loader)), epoch)
     writer.add_scalar('Train/total_fourier_loss', total_fourier_loss_per_epoch_refresh / (len(train_loader)), epoch)
     writer.add_scalar('Train/total_shuffling_loss', total_shuffling_loss_per_epoch_refresh / (len(train_loader)), epoch)
-
+    """
     loss_train.append(total_task_loss_per_epoch_refresh / (len(train_loader)))
     scheduler.step()
 
@@ -288,6 +304,16 @@ for epoch in tqdm(range(args.epoch)):
 
         print('Epoch:[%d/%d]-----Val------ LOSS:%.4f' % (
             epoch, args.epoch, total_task_loss_per_epoch_refresh / (len(val_loader))))
+
+        wandb.log({'Val/total_task_loss', total_task_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+        wandb.log({'Val/total_task_mse_loss', total_task_mse_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+        wandb.log({'Val/total_task_ssim_loss', total_task_ssim_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+        wandb.log({'Val/total_task_tv_loss', total_task_tv_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+        wandb.log({'Val/total_bright_loss', total_bright_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+        wandb.log({'Val/total_fourier_loss', total_fourier_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+        wandb.log({'Val/total_shuffling_loss', total_shuffling_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+
+        """
         writer.add_scalar('Val/total_task_loss', total_task_loss_per_epoch_refresh / (len(val_loader)), epoch)
         writer.add_scalar('Val/total_task_mse_loss', total_task_mse_loss_per_epoch_refresh / (len(val_loader)),
                           epoch)
@@ -298,7 +324,7 @@ for epoch in tqdm(range(args.epoch)):
         writer.add_scalar('Val/total_fourier_loss', total_fourier_loss_per_epoch_refresh / (len(val_loader)), epoch)
         writer.add_scalar('Val/total_shuffling_loss', total_shuffling_loss_per_epoch_refresh / (len(val_loader)),
                           epoch)
-
+        """
         loss_val.append(total_task_loss_per_epoch_refresh / (len(val_loader)))
 
     # ==================
