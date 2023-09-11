@@ -219,7 +219,7 @@ for epoch in tqdm(range(args.epoch)):
         epoch, args.epoch, total_task_loss_per_epoch_refresh / (len(train_loader))))
     wandb.log({'Train/total_task_loss', total_task_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
     wandb.log({'Train/total_task_mse_loss', total_task_mse_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
-    wandb.log({'Train/total_task_ssim_loss', total_task_ssim_loss_per_epoch_refresh / (len(train_loader)},step =epoch)
+    wandb.log({'Train/total_task_ssim_loss', total_task_ssim_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
     wandb.log({'Train/total_task_tv_loss', total_task_tv_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
     wandb.log({'Train/total_bright_loss', total_bright_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
     wandb.log({'Train/total_fourier_loss', total_fourier_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
