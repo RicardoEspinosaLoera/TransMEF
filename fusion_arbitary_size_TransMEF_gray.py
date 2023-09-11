@@ -245,7 +245,7 @@ if __name__ == '__main__':
     else:
         model.load_state_dict(state_dict)
 
-    test_path = '/workspace/c10k_gray/01_test'
+    test_path = '/workspace/c10k_gray/01_test/'
 
     model.eval()
 
