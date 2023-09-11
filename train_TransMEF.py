@@ -168,13 +168,13 @@ for epoch in tqdm(range(args.epoch)):
         image_bright = toPIL(img_recon_bright[0].squeeze(0).detach().cpu())
         image_fourier = toPIL(img_recon_fourier[0].squeeze(0).detach().cpu())
         image_shuffling = toPIL(img_recon_shuffling[0].squeeze(0).detach().cpu())
-        img_orig = toPIL(img_orig[0].squeeze(0).detach().cpu())
+        img_orig2 = toPIL(img_orig[0].squeeze(0).detach().cpu())
 
         if index % 100 == 0:
             wandb.log({args.summary_name +"_bright_epoch"+ str(epoch): wandb.Image(image_bright)},step=epoch)
             wandb.log({args.summary_name +"_image_fourier"+ str(epoch): wandb.Image(image_fourier)},step=epoch)
             wandb.log({args.summary_name +"_shuffling_epoch"+ str(epoch): wandb.Image(image_shuffling)},step=epoch)
-            wandb.log({args.summary_name +"_GT"+ str(epoch): wandb.Image(img_orig)},step=epoch)
+            wandb.log({args.summary_name +"_GT"+ str(epoch): wandb.Image(img_orig2)},step=epoch)
             """image_bright.save(os.path.join(args.save_path, args.summary_name + '_bright_epoch' + str(epoch) + '_' + str(
                 index) + '_coco_train.png'))
             image_fourier.save(
