@@ -217,13 +217,13 @@ for epoch in tqdm(range(args.epoch)):
 
     print('Epoch:[%d/%d]-----Train------ LOSS:%.4f' % (
         epoch, args.epoch, total_task_loss_per_epoch_refresh / (len(train_loader))))
-    wandb.log({'Train/total_task_loss', total_task_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
-    wandb.log({'Train/total_task_mse_loss', total_task_mse_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
-    wandb.log({'Train/total_task_ssim_loss', total_task_ssim_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
-    wandb.log({'Train/total_task_tv_loss', total_task_tv_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
-    wandb.log({'Train/total_bright_loss', total_bright_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
-    wandb.log({'Train/total_fourier_loss', total_fourier_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
-    wandb.log({'Train/total_shuffling_loss', total_shuffling_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
+    wandb.log({'Train/total_task_loss': total_task_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
+    wandb.log({'Train/total_task_mse_loss': total_task_mse_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
+    wandb.log({'Train/total_task_ssim_loss': total_task_ssim_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
+    wandb.log({'Train/total_task_tv_loss': total_task_tv_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
+    wandb.log({'Train/total_bright_loss': total_bright_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
+    wandb.log({'Train/total_fourier_loss': total_fourier_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
+    wandb.log({'Train/total_shuffling_loss': total_shuffling_loss_per_epoch_refresh / (len(train_loader))},step =epoch)
 
 
     """
@@ -305,13 +305,13 @@ for epoch in tqdm(range(args.epoch)):
         print('Epoch:[%d/%d]-----Val------ LOSS:%.4f' % (
             epoch, args.epoch, total_task_loss_per_epoch_refresh / (len(val_loader))))
 
-        wandb.log({'Val/total_task_loss', total_task_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
-        wandb.log({'Val/total_task_mse_loss', total_task_mse_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
-        wandb.log({'Val/total_task_ssim_loss', total_task_ssim_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
-        wandb.log({'Val/total_task_tv_loss', total_task_tv_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
-        wandb.log({'Val/total_bright_loss', total_bright_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
-        wandb.log({'Val/total_fourier_loss', total_fourier_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
-        wandb.log({'Val/total_shuffling_loss', total_shuffling_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+        wandb.log({'Val/total_task_loss': total_task_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+        wandb.log({'Val/total_task_mse_loss': total_task_mse_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+        wandb.log({'Val/total_task_ssim_loss': total_task_ssim_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+        wandb.log({'Val/total_task_tv_loss': total_task_tv_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+        wandb.log({'Val/total_bright_loss': total_bright_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+        wandb.log({'Val/total_fourier_loss': total_fourier_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
+        wandb.log({'Val/total_shuffling_loss': total_shuffling_loss_per_epoch_refresh / (len(val_loader))},step =epoch)
 
         """
         writer.add_scalar('Val/total_task_loss', total_task_loss_per_epoch_refresh / (len(val_loader)), epoch)
