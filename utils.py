@@ -114,5 +114,5 @@ def test(test_path, model, save_path='./test_result/'):
         save_name = 'fusion_' + str(i) + '.' + suffix
         fusion_phase.get_fusion(img1_path, img2_path, model,
                                 save_path=save_path, save_name=save_name)
-        y = y+1
+    
     
