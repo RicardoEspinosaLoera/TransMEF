@@ -16,6 +16,7 @@ import copy
 from PIL import Image
 import random
 from imgaug import augmenters as iaa
+import cv2
 
 sometimes = lambda aug: iaa.Sometimes(0.8, aug)
 np.random.seed(2)
@@ -84,6 +85,12 @@ def brightness_aug(x, gamma):
     aug_image = aug_brightness(images=x)
     return aug_image
 
+def brightness_equalization(x):
+    eq_image = cv2.equalizeHist(x)
+    #aug_brightness = iaa.Sequential(sometimes(iaa.GammaContrast(gamma=gamma)))
+    #aug_image = aug_brightness(images=x)
+    return eq_image
+
 
 def bright_transform(x):
     image_temp = copy.deepcopy(x)
@@ -97,7 +104,9 @@ def bright_transform(x):
         noise_y = random.randint(0, img_cols - block_noise_size_y)
         window = orig_image[noise_x:noise_x + block_noise_size_x,
                  noise_y:noise_y + block_noise_size_y]
-        window = brightness_aug(window, 3 * np.random.random_sample())
+        #window = brightness_aug(window, 1.5 * np.random.random_sample())
+        window = brightness_equalization(window)
+
 
         image_temp[noise_x:noise_x + block_noise_size_x,
         noise_y:noise_y + block_noise_size_y] = window
