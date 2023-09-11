@@ -21,70 +21,53 @@ import cv2
 sometimes = lambda aug: iaa.Sometimes(0.8, aug)
 np.random.seed(2)
 
-def singleScaleRetinex(img,variance):
-    retinex = np.log10(img) - np.log10(cv2.GaussianBlur(img, (0, 0), variance))
-    return retinex
+def convertScale(img, alpha, beta):
+    """Add bias and gain to an image with saturation arithmetics. Unlike
+    cv2.convertScaleAbs, it does not take an absolute value, which would lead to
+    nonsensical results (e.g., a pixel at 44 with alpha = 3 and beta = -210
+    becomes 78 with OpenCV, when in fact it should become 0).
+    """
 
-def multiScaleRetinex(img, variance_list):
-    retinex = np.zeros_like(img)
-    for variance in variance_list:
-        retinex += singleScaleRetinex(img, variance)
-    retinex = retinex / len(variance_list)
-    return retinex
-   
+    new_img = img * alpha + beta
+    new_img[new_img < 0] = 0
+    new_img[new_img > 255] = 255
+    return new_img.astype(np.uint8)
 
-def MSR(img, variance_list):
-    img = np.float64(img) + 1.0
-    img_retinex = multiScaleRetinex(img, variance_list)
+# Automatic brightness and contrast optimization with optional histogram clipping
+def automatic_brightness_and_contrast(gray, clip_hist_percent=25):
+    #gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    for i in range(img_retinex.shape[2]):
-        unique, count = np.unique(np.int32(img_retinex[:, :, i] * 100), return_counts=True)
-        for u, c in zip(unique, count):
-            if u == 0:
-                zero_count = c
-                break            
-        low_val = unique[0] / 100.0
-        high_val = unique[-1] / 100.0
-        for u, c in zip(unique, count):
-            if u < 0 and c < zero_count * 0.1:
-                low_val = u / 100.0
-            if u > 0 and c < zero_count * 0.1:
-                high_val = u / 100.0
-                break            
-        img_retinex[:, :, i] = np.maximum(np.minimum(img_retinex[:, :, i], high_val), low_val)
-        
-        img_retinex[:, :, i] = (img_retinex[:, :, i] - np.min(img_retinex[:, :, i])) / \
-                               (np.max(img_retinex[:, :, i]) - np.min(img_retinex[:, :, i])) \
-                               * 255
-    img_retinex = np.uint8(img_retinex)        
-    return img_retinex
+    # Calculate grayscale histogram
+    hist = cv2.calcHist([gray],[0],None,[256],[0,256])
+    hist_size = len(hist)
 
+    # Calculate cumulative distribution from the histogram
+    accumulator = []
+    accumulator.append(float(hist[0]))
+    for index in range(1, hist_size):
+        accumulator.append(accumulator[index -1] + float(hist[index]))
 
+    # Locate points to clip
+    maximum = accumulator[-1]
+    clip_hist_percent *= (maximum/100.0)
+    clip_hist_percent /= 2.0
 
-def SSR(img, variance):
-    img = np.float64(img) + 1.0
-    img_retinex = singleScaleRetinex(img, variance)
-    #for i in range(img_retinex.shape[2]):
-    unique, count = np.unique(np.int32(img_retinex[:, :] * 100), return_counts=True)
-    for u, c in zip(unique, count):
-        if u == 0:
-            zero_count = c
-            break            
-    low_val = unique[0] / 100.0
-    high_val = unique[-1] / 100.0
-    for u, c in zip(unique, count):
-        if u < 0 and c < zero_count * 0.1:
-            low_val = u / 100.0
-        if u > 0 and c < zero_count * 0.1:
-            high_val = u / 100.0
-            break            
-    img_retinex[:, :] = np.maximum(np.minimum(img_retinex[:, :], high_val), low_val)
-    
-    img_retinex[:, :] = (img_retinex[:, :] - np.min(img_retinex[:, :])) / \
-                            (np.max(img_retinex[:, :]) - np.min(img_retinex[:, :])) \
-                            * 255
-    img_retinex = np.uint8(img_retinex)        
-    return img_retinex
+    # Locate left cut
+    minimum_gray = 0
+    while accumulator[minimum_gray] < clip_hist_percent:
+        minimum_gray += 1
+
+    # Locate right cut
+    maximum_gray = hist_size -1
+    while accumulator[maximum_gray] >= (maximum - clip_hist_percent):
+        maximum_gray -= 1
+
+    # Calculate alpha and beta values
+    alpha = 255 / (maximum_gray - minimum_gray)
+    beta = -minimum_gray * alpha
+
+    auto_result = convertScale(image, alpha=alpha, beta=beta)
+    return auto_result
 
 
 def local_pixel_shuffling(x):
@@ -252,7 +235,7 @@ class Fusionset(Data.Dataset):
         if self.gray:
             img = img.convert('L')
         img = np.array(img)
-        img = SSR(img,500)
+        img = automatic_brightness_and_contrast(img)
 
         if self.ssl_transformations == True:
             img_bright_orig = img.copy()
