@@ -66,7 +66,7 @@ def automatic_brightness_and_contrast(gray, clip_hist_percent=25):
     alpha = 255 / (maximum_gray - minimum_gray)
     beta = -minimum_gray * alpha
 
-    auto_result = convertScale(image, alpha=alpha, beta=beta)
+    auto_result = convertScale(gray, alpha=alpha, beta=beta)
     return auto_result
 
 
