@@ -107,12 +107,12 @@ def test(test_path, model, save_path='./test_result/'):
     fusion_phase = test_gray()
     #print(type(img_name_list))
     for i in range(len(img_name_list)-1):
-        print(img_name_list[i])
+        #print(img_name_list[i])
         img1_path = test_path + "/" + str(img_name_list[i]) + '.' + suffix
         img2_path = test_path + "/" + str(img_name_list[i+1]) + '.' + suffix
         #print(img1_path)
         #print(img2_path)
-        save_name = 'fusion_' + str(i) + '.' + suffix
+        save_name = str(i) + '.' + suffix
         fusion_phase.get_fusion(img1_path, img2_path, model,
                                 save_path=save_path, save_name=save_name)
     
