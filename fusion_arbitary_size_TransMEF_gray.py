@@ -206,6 +206,7 @@ class test_gray(Test):
 
 def fun(test_path, model, save_path='./test_result/'):
     img_list = glob(test_path + '*.jpg')
+    print(img_list)
     img_num = len(img_list) / 2
     suffix = img_list[0].split('.')[-1]
     img_name_list = list(set([int(img_list[i].split('/')[-1].split('.')[0]) for i in range(len(img_list))]))
