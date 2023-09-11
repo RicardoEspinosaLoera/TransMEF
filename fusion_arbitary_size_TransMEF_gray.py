@@ -205,6 +205,7 @@ class test_gray(Test):
         return fused_img
 
 def fun(test_path, model, save_path='./test_result/'):
+    print(test_path)
     img_list = glob(test_path + '*.jpg')
     print(img_list)
     img_num = len(img_list) / 2
